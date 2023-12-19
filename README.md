@@ -21,4 +21,7 @@ Embedding Model from HF
 ```bash
 sentence-transformers/all-MiniLM-L6-v2
 ```
-Create Pinecone Indexes
+Create Pinecone Indexes 
+```bash
+index_name = 'test'
+```
