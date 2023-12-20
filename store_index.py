@@ -1,4 +1,4 @@
-from src.help import data_extractor,text_splitter,download_embedding_model
+from src.helper import data_extractor,text_splitter,download_embedding_model
 from langchain.vectorstores import Pinecone
 import pinecone
 from dotenv import load_dotenv
@@ -9,6 +9,7 @@ load_dotenv()
 # load the .env keys
 PINE_CONE_API_KEY = os.getenv('PINE_CONE_API_KEY')
 PINE_CONE_ENV = os.getenv('PINE_CONE_ENV')
+index_name = os.getenv('index_name')
 
 # load the pdf data 
 pdf_data = data_extractor('data/')
@@ -24,9 +25,9 @@ pinecone.init(api_key = PINE_CONE_API_KEY, #type: ignore
               environment = PINE_CONE_ENV #type: ignore
             )
 
-index_name = "medical-chat-bot-llama-2"
 # creating embeddings for each text chunk and storing into pinecone
-# doc_search = Pinecone.from_texts([i.page_content for i in text_chunks], # list of chunks text
-#                                   embedding = embedding_model, # Embedding model
-#                                   index_name = index_name  # pinecone index name
-#                                   )
+doc_search = Pinecone.from_texts([i.page_content for i in text_chunks], # list of chunks text
+                                  embedding = embedding_model, # Embedding model
+                                  index_name = index_name  # pinecone index name
+                                  )
+

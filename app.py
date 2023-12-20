@@ -1,5 +1,5 @@
 from flask import Flask,render_template,request
-from src.help import download_embedding_model
+from src.helper import download_embedding_model
 from langchain.vectorstores import Pinecone
 import pinecone
 from langchain.llms import CTransformers
@@ -17,6 +17,9 @@ load_dotenv()
 # Reading pine cone keys
 PINE_CONE_API_KEY = os.getenv('PINE_CONE_API_KEY')
 PINE_CONE_ENV = os.getenv('PINE_CONE_ENV')
+index_name = os.getenv('index_name')
+model_name = os.getenv('model_name')
+model_file = os.getenv('model_file')
 
 # Loading the embedding model
 embedding_model = download_embedding_model()
@@ -24,8 +27,6 @@ embedding_model = download_embedding_model()
 # initializing the pinecone
 pinecone.init(api_key=PINE_CONE_API_KEY, #type: ignore
               environment=PINE_CONE_ENV) #type: ignore
-
-index_name = 'medical-chat-bot-llama-2'
 
 # loading the existing index from pinecone
 doc_search = Pinecone.from_existing_index(index_name,embedding_model)
@@ -38,22 +39,19 @@ chain_type_kwargs = {'prompt':prompt}
 
 # loading the llm model
 # model_type='llama',
-model = CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
-                    model_file='llama-2-7b-chat.ggmlv3.q5_0.bin',
-                    device_map='cuda',
-                    config = {'temperature':0.35,
-                            'max_new_tokens':1024,
-                            # 'repetition_penalty':0.7,
-                            'stream':True,
-                            # 'context_length':-1
-                            })
+model = CTransformers(  model=model_name,
+                        model_file=model_file,
+                        config = {  'temperature':0.35,
+                                    'max_new_tokens':1024
+                                }
+                    )
 
 # # creating QA
 qa_bot = RetrievalQA.from_chain_type(llm=model,
-                                    chain_type="stuff",
-                                    retriever = doc_search.as_retriever(search_kwargs={'k':4}),
-                                    return_source_documents=True,
-                                    chain_type_kwargs=chain_type_kwargs
+                                     chain_type="stuff",
+                                     retriever = doc_search.as_retriever(search_kwargs={'k':4}),
+                                     return_source_documents=True,
+                                     chain_type_kwargs=chain_type_kwargs
                                     )
 
 
@@ -72,4 +70,4 @@ def chat():
 
 if __name__=="__main__":
 
-    app.run(port=8016,debug=True,use_reloader=False)
+    app.run(debug=True)
