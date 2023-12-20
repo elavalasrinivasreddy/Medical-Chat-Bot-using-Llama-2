@@ -71,8 +71,10 @@ python app.py
 http:\\localhost:5000
 ```
 ### Tech-stack :
+```bash
 --Python
 --Langchain
 --Flask
 --Meta Llama-2
 --Pinecone
+```
