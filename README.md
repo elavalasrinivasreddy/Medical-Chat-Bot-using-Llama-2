@@ -1,9 +1,9 @@
 # Medical-Chat-Bot-using-Llama-2
-Building end to end medical chat bot using Llama 2 LLM
+## Building end to end medical chat bot using Llama 2 LLM
 
-Steps to run the application
+### Steps to run the application
 
-clone the git repo
+#### clone the git repo
 ```bash
 git clone https://github.com/elavalasrinivasreddy/Medical-Chat-Bot-using-Llama-2
 ```
